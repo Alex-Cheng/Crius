@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-
+<!DOCTYPE html>
 <html lang=en>
 <head>
     <title>Rule Editor</title>
@@ -27,16 +26,16 @@
             function InvokeNamedRuleActivity(node) {
                 var subruleName = $(node).attr("RulePath").split("/").pop();
                 return {
-                    domObject: $("<div class=activity></div>")
+                    domObject: $("<div class=activity><span class='icons unfolderIcon'></span></div>")
                         .append($("<span>Invoke subrule</span>"))
-                        .append($("<a class=subrule href=#></a>").text(subruleName))
+                        .append($("<a class=subrule href=###></a>").text(subruleName))
                 };
             }
 
             function NamedRuleFunction(node) {
                 var subruleName = $(node).attr("RulePath").split("/").pop();
                 return {
-                    domObject: $("<a class=subrule href=#></a>").text(subruleName)
+                    domObject: $("<a class=subrule href=###></a>").text(subruleName)
                 };
             }
 
@@ -68,7 +67,7 @@
                 });
 
                 return {
-                    domObject: $("<div class=activity>If</div>")
+                    domObject: $("<div class=activity><span class='icons unfolderIcon'></span>If</div>")
                                 .append($condExprUI)
                                 .append("<p>Then</p>")
                                 .append($thenUI)
@@ -204,12 +203,39 @@
                     $activity.children().each(function () {
                         parseActivity(this, $("#board"));
                     });
+    				$(".icons").toggle(
+						function(){
+							$(this).parent().css("height", "24px");
+							$(this).removeClass("unfolderIcon");
+							$(this).addClass("folderIcon");
+						}, 
+						function(){
+							$(this).parent().css("height", "");
+							$(this).removeClass("folderIcon");
+							$(this).addClass("unfolderIcon");
+						}
+					);
+					$(".whitebg").bind("click", function(){
+						$("body").attr("class", "white");
+					})
+					$(".blackbg").bind("click", function(){
+						$("body").attr("class", "black");
+					})
+					$(".greybg").bind("click", function(){
+						$("body").attr("class", "grey");
+					})
                 }
             });
         });
     </script>
 </head>
-<body>
-    <div id="board"></div>
+<body class="white">
+    <div id="board">
+		<p>
+			<span class="whitebg"><span></span> white</span>
+			<span class="greybg"><span></span> grey</span>
+			<span class="blackbg"> <span></span> black</span>
+		</p>
+	</div>
 </body>
 </html>
