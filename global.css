@@ -1,0 +1,65 @@
+﻿.activity 
+{
+    margin: 10px 0px 10px 0px;
+    text-align:center;
+    /*width: 500px;*/
+    padding: 6px;
+    background-color: #CCFFFF;
+    border:solid 1px #000000;
+    -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
+    -moz-box-shadow: 3px  3px  3px  #000000;
+    -webkit-box-shadow: 3px  3px  3px  #000000;
+    box-shadow: 3px  3px  3px  #000000;
+}
+
+.subrule 
+{
+    margin-left: 6px;
+}
+
+.sequence
+{
+}
+
+.expr
+{
+    display: inline;
+    margin-left: 10px;
+    border: 1px solid blue;
+}
+
+.function 
+{
+    display: inline
+}
+
+.expander
+{
+    margin: 10px;
+}
+
+.text
+{
+    font-weight:bold;
+    color: Gray
+}
+
+.operator
+{
+    font-weight: bold;
+    color: Blue;
+    font-style: italic;
+    margin: 0px 6px 0px 6px;
+}
+
+.literal
+{
+    color: Red;
+}
+
+.exprItem
+{
+    display: inline;
+}

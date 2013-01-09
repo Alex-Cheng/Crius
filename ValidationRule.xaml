@@ -1,0 +1,1248 @@
+<!-- Setting Entry
+<Setting xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <ApplicationVersion>3.0.1</ApplicationVersion>
+  <ContentVersion>2.1.7</ContentVersion>
+  <Name>/Validation/ELECTRIC/Point/EL_TRANSFORMER;</Name>
+  <ReleaseVersion>2.1.0</ReleaseVersion>
+  <RequiredDataModelCodes>
+    <DataModelCode>5.7.1</DataModelCode>
+  </RequiredDataModelCodes>
+</Setting>
+     Setting Entry -->
+<Activity x:Class="EL_TRANSFORMER" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:amimca="clr-namespace:Autodesk.Map.IM.Modules.Common.API;assembly=Autodesk.Map.IM.Modules.Common" xmlns:au="http://www.autodesk.com/utilitydesign/common" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:rule="http://www.autodesk.com/utilitydesign/rule" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<x:Members>
+		<x:Property Name="FeatureItem" Type="InArgument(amimca:IFeatureItem)" />
+		<x:Property Name="ValidationResult" Type="InArgument(rule:ValidationRuleResult)" />
+	</x:Members>
+	<Sequence mva:VisualBasic.Settings="Assembly references and imported namespaces serialized as XML namespaces">
+		<rule:InvokeNamedRule RulePath="/Validation/ELECTRIC/Point/Feeder not allowed" />
+		<rule:InvokeNamedRule RulePath="/Validation/ELECTRIC/Point/Must be connected" />
+		<rule:If>
+			<rule:If.Condition>
+				<InArgument x:TypeArguments="au:DynamicValue">
+					<rule:FeaturePropertyIsSet Feature="[FeatureItem]" PropertyPath="MODEL_NAME" />
+				</InArgument>
+			</rule:If.Condition>
+			<rule:If.Then>
+				<Sequence>
+					<rule:If>
+						<rule:If.Condition>
+							<InArgument x:TypeArguments="au:DynamicValue">
+								<rule:AndAlso>
+									<rule:AndAlso.Left>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:Equal>
+												<rule:Equal.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="PHASE_COUNT" />
+													</InArgument>
+												</rule:Equal.Left>
+												<rule:Equal.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:DynamicLiteral x:TypeArguments="x:Int32" Value="1" />
+													</InArgument>
+												</rule:Equal.Right>
+											</rule:Equal>
+										</InArgument>
+									</rule:AndAlso.Left>
+									<rule:AndAlso.Right>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:Equal>
+												<rule:Equal.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="ID_STRUCTURE_TYPE" />
+													</InArgument>
+												</rule:Equal.Left>
+												<rule:Equal.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:DomainValue DomainName="EL_STRUCTURE_TYPE_TBD" ID="2" />
+													</InArgument>
+												</rule:Equal.Right>
+											</rule:Equal>
+										</InArgument>
+									</rule:AndAlso.Right>
+								</rule:AndAlso>
+							</InArgument>
+						</rule:If.Condition>
+						<rule:If.Then>
+							<Sequence>
+								<rule:If>
+									<rule:If.Condition>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:GreaterThan>
+												<rule:GreaterThan.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/3PH Primary Cable" />
+													</InArgument>
+												</rule:GreaterThan.Left>
+												<rule:GreaterThan.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0" />
+													</InArgument>
+												</rule:GreaterThan.Right>
+											</rule:GreaterThan>
+										</InArgument>
+									</rule:If.Condition>
+									<rule:If.Then>
+										<Sequence>
+											<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="c8477f9a-144a-460d-b9a6-54b44dff5dcf">
+												<rule:AddValidationItem.Message>
+													<InArgument x:TypeArguments="x:String">
+														<rule:StringExpression>
+															<rule:StringExpression.Elements>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringLiteral Uid="f771b64d-06ef-400f-8653-5fb93f31e9bd" Value="Three-phase primary cables are not allowed in a single-phase transformer. Please redesign." />
+																</InArgument>
+															</rule:StringExpression.Elements>
+														</rule:StringExpression>
+													</InArgument>
+												</rule:AddValidationItem.Message>
+											</rule:AddValidationItem>
+										</Sequence>
+									</rule:If.Then>
+									<rule:If.Else>
+										<Sequence />
+									</rule:If.Else>
+								</rule:If>
+								<rule:If>
+									<rule:If.Condition>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:GreaterThan>
+												<rule:GreaterThan.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/3PH Secondary\Service" />
+													</InArgument>
+												</rule:GreaterThan.Left>
+												<rule:GreaterThan.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0" />
+													</InArgument>
+												</rule:GreaterThan.Right>
+											</rule:GreaterThan>
+										</InArgument>
+									</rule:If.Condition>
+									<rule:If.Then>
+										<Sequence>
+											<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="37484ce9-70aa-41d5-9407-f366afd92238">
+												<rule:AddValidationItem.Message>
+													<InArgument x:TypeArguments="x:String">
+														<rule:StringExpression>
+															<rule:StringExpression.Elements>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringLiteral Uid="a54bc09b-2194-4f1a-a230-d696a2aaccdc" Value="Three-phase secondary cables are not allowed in a single-phase transformer. Please redesign." />
+																</InArgument>
+															</rule:StringExpression.Elements>
+														</rule:StringExpression>
+													</InArgument>
+												</rule:AddValidationItem.Message>
+											</rule:AddValidationItem>
+										</Sequence>
+									</rule:If.Then>
+									<rule:If.Else>
+										<Sequence />
+									</rule:If.Else>
+								</rule:If>
+								<rule:If>
+									<rule:If.Condition>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:OrElse>
+												<rule:OrElse.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:Equal>
+															<rule:Equal.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="StatusInternal" />
+																</InArgument>
+															</rule:Equal.Left>
+															<rule:Equal.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="au:Status" Value="New" />
+																</InArgument>
+															</rule:Equal.Right>
+														</rule:Equal>
+													</InArgument>
+												</rule:OrElse.Left>
+												<rule:OrElse.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:Equal>
+															<rule:Equal.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="StatusInternal" />
+																</InArgument>
+															</rule:Equal.Left>
+															<rule:Equal.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="au:Status" Value="Existing" />
+																</InArgument>
+															</rule:Equal.Right>
+														</rule:Equal>
+													</InArgument>
+												</rule:OrElse.Right>
+											</rule:OrElse>
+										</InArgument>
+									</rule:If.Condition>
+									<rule:If.Then>
+										<Sequence>
+											<rule:If>
+												<rule:If.Condition>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:Equal>
+															<rule:Equal.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/New or Existing 1PH Primary" />
+																</InArgument>
+															</rule:Equal.Left>
+															<rule:Equal.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0" />
+																</InArgument>
+															</rule:Equal.Right>
+														</rule:Equal>
+													</InArgument>
+												</rule:If.Condition>
+												<rule:If.Then>
+													<Sequence>
+														<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="c4638eaa-6eb9-4824-a8f6-9499dbc922c8">
+															<rule:AddValidationItem.Message>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringExpression>
+																		<rule:StringExpression.Elements>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringLiteral Uid="9c6f1cd6-aef3-4995-9974-f89ac0df187c" Value="A minimum of 1 new or existing single-phase primary cable is required for this single-phase transformer. Please redesign." />
+																			</InArgument>
+																		</rule:StringExpression.Elements>
+																	</rule:StringExpression>
+																</InArgument>
+															</rule:AddValidationItem.Message>
+														</rule:AddValidationItem>
+													</Sequence>
+												</rule:If.Then>
+												<rule:If.Else>
+													<Sequence />
+												</rule:If.Else>
+											</rule:If>
+											<rule:If>
+												<rule:If.Condition>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:Equal>
+															<rule:Equal.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="ID_TRANSFORMER_TYPE" />
+																</InArgument>
+															</rule:Equal.Left>
+															<rule:Equal.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DomainValue DomainName="EL_TRANSFORMER_TBD" ID="3" />
+																</InArgument>
+															</rule:Equal.Right>
+														</rule:Equal>
+													</InArgument>
+												</rule:If.Condition>
+												<rule:If.Then>
+													<Sequence>
+														<rule:If>
+															<rule:If.Condition>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:GreaterThan>
+																		<rule:GreaterThan.Left>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/New or Existing 1PH Primary" />
+																			</InArgument>
+																		</rule:GreaterThan.Left>
+																		<rule:GreaterThan.Right>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:DynamicLiteral x:TypeArguments="x:Int32" Value="1" />
+																			</InArgument>
+																		</rule:GreaterThan.Right>
+																	</rule:GreaterThan>
+																</InArgument>
+															</rule:If.Condition>
+															<rule:If.Then>
+																<Sequence>
+																	<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="4e8132a6-8ca0-41ed-ba75-d390cddf46eb">
+																		<rule:AddValidationItem.Message>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringExpression>
+																					<rule:StringExpression.Elements>
+																						<InArgument x:TypeArguments="x:String">
+																							<rule:StringLiteral Uid="3572c9b8-8b6e-4c79-8f7b-0040db696d6f" Value="Only 1 single-phase primary cable is allowed in this radial transformer. Please redesign." />
+																						</InArgument>
+																					</rule:StringExpression.Elements>
+																				</rule:StringExpression>
+																			</InArgument>
+																		</rule:AddValidationItem.Message>
+																	</rule:AddValidationItem>
+																</Sequence>
+															</rule:If.Then>
+															<rule:If.Else>
+																<Sequence />
+															</rule:If.Else>
+														</rule:If>
+													</Sequence>
+												</rule:If.Then>
+												<rule:If.Else>
+													<Sequence>
+														<rule:If>
+															<rule:If.Condition>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:GreaterThan>
+																		<rule:GreaterThan.Left>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/New or Existing 1PH Primary" />
+																			</InArgument>
+																		</rule:GreaterThan.Left>
+																		<rule:GreaterThan.Right>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:DynamicLiteral x:TypeArguments="x:Double" Value="3" />
+																			</InArgument>
+																		</rule:GreaterThan.Right>
+																	</rule:GreaterThan>
+																</InArgument>
+															</rule:If.Condition>
+															<rule:If.Then>
+																<Sequence>
+																	<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="b2e02ebd-cddf-4071-89c8-19b371d3ed09">
+																		<rule:AddValidationItem.Message>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringExpression>
+																					<rule:StringExpression.Elements>
+																						<InArgument x:TypeArguments="x:String">
+																							<rule:StringLiteral Uid="9d8c2bb3-8c64-433d-9ca8-a9ded5b34804" Value="A maximum of 3 new or existing single-phase primary cable is allowed in this single-phase transformer. Please redesign." />
+																						</InArgument>
+																					</rule:StringExpression.Elements>
+																				</rule:StringExpression>
+																			</InArgument>
+																		</rule:AddValidationItem.Message>
+																	</rule:AddValidationItem>
+																</Sequence>
+															</rule:If.Then>
+															<rule:If.Else>
+																<Sequence />
+															</rule:If.Else>
+														</rule:If>
+													</Sequence>
+												</rule:If.Else>
+											</rule:If>
+											<rule:If>
+												<rule:If.Condition>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:GreaterThan>
+															<rule:GreaterThan.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/Total New\Existing Sec\Srv\Stl" />
+																</InArgument>
+															</rule:GreaterThan.Left>
+															<rule:GreaterThan.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="x:Double" Value="8" />
+																</InArgument>
+															</rule:GreaterThan.Right>
+														</rule:GreaterThan>
+													</InArgument>
+												</rule:If.Condition>
+												<rule:If.Then>
+													<Sequence>
+														<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="eb6ff9b5-f47c-4ac0-84ae-380a81ceda90">
+															<rule:AddValidationItem.Message>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringExpression>
+																		<rule:StringExpression.Elements>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringLiteral Uid="090f0a1c-cc8c-4f3c-aa87-a35e2c26b002" Value="A maximum of 8 Secondary\Service\Street Light cables is allowed in this transformer. Please redesign." />
+																			</InArgument>
+																		</rule:StringExpression.Elements>
+																	</rule:StringExpression>
+																</InArgument>
+															</rule:AddValidationItem.Message>
+														</rule:AddValidationItem>
+													</Sequence>
+												</rule:If.Then>
+												<rule:If.Else>
+													<Sequence />
+												</rule:If.Else>
+											</rule:If>
+										</Sequence>
+									</rule:If.Then>
+									<rule:If.Else>
+										<Sequence>
+											<rule:If>
+												<rule:If.Condition>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:Equal>
+															<rule:Equal.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/1PH Primary Cable" />
+																</InArgument>
+															</rule:Equal.Left>
+															<rule:Equal.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0" />
+																</InArgument>
+															</rule:Equal.Right>
+														</rule:Equal>
+													</InArgument>
+												</rule:If.Condition>
+												<rule:If.Then>
+													<Sequence>
+														<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="a10efb28-24cd-449f-85e1-075795f3c478">
+															<rule:AddValidationItem.Message>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringExpression>
+																		<rule:StringExpression.Elements>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringLiteral Uid="21e251d2-3b55-424c-b117-fdf7d077a8ee" Value="A minimum of 1 single-phase primary cable is required for this single-phase transformer. Please redesign." />
+																			</InArgument>
+																		</rule:StringExpression.Elements>
+																	</rule:StringExpression>
+																</InArgument>
+															</rule:AddValidationItem.Message>
+														</rule:AddValidationItem>
+													</Sequence>
+												</rule:If.Then>
+												<rule:If.Else>
+													<Sequence />
+												</rule:If.Else>
+											</rule:If>
+											<rule:If>
+												<rule:If.Condition>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:GreaterThan>
+															<rule:GreaterThan.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/1PH Primary Cable" />
+																</InArgument>
+															</rule:GreaterThan.Left>
+															<rule:GreaterThan.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="x:Double" Value="3" />
+																</InArgument>
+															</rule:GreaterThan.Right>
+														</rule:GreaterThan>
+													</InArgument>
+												</rule:If.Condition>
+												<rule:If.Then>
+													<Sequence>
+														<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="4fa5ca7e-2816-46c5-a68d-5322c97d40e9">
+															<rule:AddValidationItem.Message>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringExpression>
+																		<rule:StringExpression.Elements>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringLiteral Uid="9b84fb2d-841a-4215-a275-81fc39313a32" Value="A maximum of 3 single-phase primary cable is allowed in this single-phase transformer. Please redesign." />
+																			</InArgument>
+																		</rule:StringExpression.Elements>
+																	</rule:StringExpression>
+																</InArgument>
+															</rule:AddValidationItem.Message>
+														</rule:AddValidationItem>
+													</Sequence>
+												</rule:If.Then>
+												<rule:If.Else>
+													<Sequence />
+												</rule:If.Else>
+											</rule:If>
+											<rule:If>
+												<rule:If.Condition>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:GreaterThan>
+															<rule:GreaterThan.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/1PH Sec\Srv\Stl" />
+																</InArgument>
+															</rule:GreaterThan.Left>
+															<rule:GreaterThan.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="x:Double" Value="8" />
+																</InArgument>
+															</rule:GreaterThan.Right>
+														</rule:GreaterThan>
+													</InArgument>
+												</rule:If.Condition>
+												<rule:If.Then>
+													<Sequence>
+														<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="0f83c441-8faa-4c34-9a72-342a27246346">
+															<rule:AddValidationItem.Message>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringExpression>
+																		<rule:StringExpression.Elements>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringLiteral Uid="58194e98-8694-4ae2-8ef9-808bef2728d1" Value="A maximum of 8 Secondary\Service\Street Light cables is allowed in this transformer. Please redesign." />
+																			</InArgument>
+																		</rule:StringExpression.Elements>
+																	</rule:StringExpression>
+																</InArgument>
+															</rule:AddValidationItem.Message>
+														</rule:AddValidationItem>
+													</Sequence>
+												</rule:If.Then>
+												<rule:If.Else>
+													<Sequence />
+												</rule:If.Else>
+											</rule:If>
+										</Sequence>
+									</rule:If.Else>
+								</rule:If>
+							</Sequence>
+						</rule:If.Then>
+						<rule:If.Else>
+							<Sequence>
+								<rule:If>
+									<rule:If.Condition>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:AndAlso>
+												<rule:AndAlso.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:Equal>
+															<rule:Equal.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="PHASE_COUNT" />
+																</InArgument>
+															</rule:Equal.Left>
+															<rule:Equal.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="x:Double" Value="3" />
+																</InArgument>
+															</rule:Equal.Right>
+														</rule:Equal>
+													</InArgument>
+												</rule:AndAlso.Left>
+												<rule:AndAlso.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:Equal>
+															<rule:Equal.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="ID_STRUCTURE_TYPE" />
+																</InArgument>
+															</rule:Equal.Left>
+															<rule:Equal.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DomainValue DomainName="EL_STRUCTURE_TYPE_TBD" ID="2" />
+																</InArgument>
+															</rule:Equal.Right>
+														</rule:Equal>
+													</InArgument>
+												</rule:AndAlso.Right>
+											</rule:AndAlso>
+										</InArgument>
+									</rule:If.Condition>
+									<rule:If.Then>
+										<Sequence>
+											<rule:If>
+												<rule:If.Condition>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:OrElse>
+															<rule:OrElse.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:Equal>
+																		<rule:Equal.Left>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="StatusInternal" />
+																			</InArgument>
+																		</rule:Equal.Left>
+																		<rule:Equal.Right>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:DynamicLiteral x:TypeArguments="au:Status" Value="New" />
+																			</InArgument>
+																		</rule:Equal.Right>
+																	</rule:Equal>
+																</InArgument>
+															</rule:OrElse.Left>
+															<rule:OrElse.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:Equal>
+																		<rule:Equal.Left>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="StatusInternal" />
+																			</InArgument>
+																		</rule:Equal.Left>
+																		<rule:Equal.Right>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:DynamicLiteral x:TypeArguments="au:Status" Value="Existing" />
+																			</InArgument>
+																		</rule:Equal.Right>
+																	</rule:Equal>
+																</InArgument>
+															</rule:OrElse.Right>
+														</rule:OrElse>
+													</InArgument>
+												</rule:If.Condition>
+												<rule:If.Then>
+													<Sequence>
+														<rule:If>
+															<rule:If.Condition>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:Equal>
+																		<rule:Equal.Left>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/New or Existing 3PH Primary" />
+																			</InArgument>
+																		</rule:Equal.Left>
+																		<rule:Equal.Right>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0" />
+																			</InArgument>
+																		</rule:Equal.Right>
+																	</rule:Equal>
+																</InArgument>
+															</rule:If.Condition>
+															<rule:If.Then>
+																<Sequence>
+																	<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="15347a82-f5b7-42bc-a378-315de9aa71d2">
+																		<rule:AddValidationItem.Message>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringExpression>
+																					<rule:StringExpression.Elements>
+																						<InArgument x:TypeArguments="x:String">
+																							<rule:StringLiteral Uid="99fd09f7-9d9c-4585-bc6e-36d3f331d15d" Value="A minimum of 1 new or existing three-phase primary cable is required for this three-phase transformer. Please redesign." />
+																						</InArgument>
+																					</rule:StringExpression.Elements>
+																				</rule:StringExpression>
+																			</InArgument>
+																		</rule:AddValidationItem.Message>
+																	</rule:AddValidationItem>
+																</Sequence>
+															</rule:If.Then>
+															<rule:If.Else>
+																<Sequence />
+															</rule:If.Else>
+														</rule:If>
+														<rule:If>
+															<rule:If.Condition>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:GreaterThan>
+																		<rule:GreaterThan.Left>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:Add>
+																					<rule:Add.Left>
+																						<InArgument x:TypeArguments="au:DynamicValue">
+																							<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/Total New Primary Cable Runs" />
+																						</InArgument>
+																					</rule:Add.Left>
+																					<rule:Add.Right>
+																						<InArgument x:TypeArguments="au:DynamicValue">
+																							<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/Total Existing Primary Cable Runs" />
+																						</InArgument>
+																					</rule:Add.Right>
+																				</rule:Add>
+																			</InArgument>
+																		</rule:GreaterThan.Left>
+																		<rule:GreaterThan.Right>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:DynamicLiteral x:TypeArguments="x:Double" Value="6" />
+																			</InArgument>
+																		</rule:GreaterThan.Right>
+																	</rule:GreaterThan>
+																</InArgument>
+															</rule:If.Condition>
+															<rule:If.Then>
+																<Sequence>
+																	<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="3d73f6f3-d471-4091-8111-9808b50e64f5">
+																		<rule:AddValidationItem.Message>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringExpression>
+																					<rule:StringExpression.Elements>
+																						<InArgument x:TypeArguments="x:String">
+																							<rule:StringLiteral Uid="f1c434f5-9ba5-4663-80d7-2def7602bd13" Value="A maximum of 6 new or existing primary cables is allowed in this three-phase transformer. Please redesign." />
+																						</InArgument>
+																					</rule:StringExpression.Elements>
+																				</rule:StringExpression>
+																			</InArgument>
+																		</rule:AddValidationItem.Message>
+																	</rule:AddValidationItem>
+																</Sequence>
+															</rule:If.Then>
+															<rule:If.Else>
+																<Sequence />
+															</rule:If.Else>
+														</rule:If>
+														<rule:If>
+															<rule:If.Condition>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:GreaterThan>
+																		<rule:GreaterThan.Left>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/Total New\Existing Sec\Srv\Stl" />
+																			</InArgument>
+																		</rule:GreaterThan.Left>
+																		<rule:GreaterThan.Right>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:DynamicLiteral x:TypeArguments="x:Double" Value="8" />
+																			</InArgument>
+																		</rule:GreaterThan.Right>
+																	</rule:GreaterThan>
+																</InArgument>
+															</rule:If.Condition>
+															<rule:If.Then>
+																<Sequence>
+																	<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="364b1137-f6a1-44a0-b128-ba6d38e031d2">
+																		<rule:AddValidationItem.Message>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringExpression>
+																					<rule:StringExpression.Elements>
+																						<InArgument x:TypeArguments="x:String">
+																							<rule:StringLiteral Uid="8ad248ea-ac9c-4b99-8805-f17c627f7db3" Value="A maximum of 8 Secondary\Service\Street Light cables is allowed in this transformer. Please redesign." />
+																						</InArgument>
+																					</rule:StringExpression.Elements>
+																				</rule:StringExpression>
+																			</InArgument>
+																		</rule:AddValidationItem.Message>
+																	</rule:AddValidationItem>
+																</Sequence>
+															</rule:If.Then>
+															<rule:If.Else>
+																<Sequence />
+															</rule:If.Else>
+														</rule:If>
+														<rule:If>
+															<rule:If.Condition>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:GreaterThan>
+																		<rule:GreaterThan.Left>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/New or Existing 1PH Sec\Svr\Stl Cable" />
+																			</InArgument>
+																		</rule:GreaterThan.Left>
+																		<rule:GreaterThan.Right>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0" />
+																			</InArgument>
+																		</rule:GreaterThan.Right>
+																	</rule:GreaterThan>
+																</InArgument>
+															</rule:If.Condition>
+															<rule:If.Then>
+																<Sequence>
+																	<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Message" Uid="f4f1c22c-3410-49f5-876f-e40f7bb8d5d6">
+																		<rule:AddValidationItem.Message>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringExpression>
+																					<rule:StringExpression.Elements>
+																						<InArgument x:TypeArguments="x:String">
+																							<rule:StringLiteral Uid="29dd6efe-65b3-4aa9-a12b-834f593f39a9" Value="Single-phase secondary cables detected in this three-phase transformer." />
+																						</InArgument>
+																					</rule:StringExpression.Elements>
+																				</rule:StringExpression>
+																			</InArgument>
+																		</rule:AddValidationItem.Message>
+																	</rule:AddValidationItem>
+																</Sequence>
+															</rule:If.Then>
+															<rule:If.Else>
+																<Sequence />
+															</rule:If.Else>
+														</rule:If>
+													</Sequence>
+												</rule:If.Then>
+												<rule:If.Else>
+													<Sequence>
+														<rule:If>
+															<rule:If.Condition>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:Equal>
+																		<rule:Equal.Left>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/3PH Primary Cable" />
+																			</InArgument>
+																		</rule:Equal.Left>
+																		<rule:Equal.Right>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0" />
+																			</InArgument>
+																		</rule:Equal.Right>
+																	</rule:Equal>
+																</InArgument>
+															</rule:If.Condition>
+															<rule:If.Then>
+																<Sequence>
+																	<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="03bee58b-1e2e-4590-a58e-74f138d91de6">
+																		<rule:AddValidationItem.Message>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringExpression>
+																					<rule:StringExpression.Elements>
+																						<InArgument x:TypeArguments="x:String">
+																							<rule:StringLiteral Uid="a6040e42-1635-4f11-86f4-4f864f9da906" Value="A minimum of 1 three-phase primary cable is required for this three-phase transformer. Please redesign." />
+																						</InArgument>
+																					</rule:StringExpression.Elements>
+																				</rule:StringExpression>
+																			</InArgument>
+																		</rule:AddValidationItem.Message>
+																	</rule:AddValidationItem>
+																</Sequence>
+															</rule:If.Then>
+															<rule:If.Else>
+																<Sequence />
+															</rule:If.Else>
+														</rule:If>
+														<rule:If>
+															<rule:If.Condition>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:GreaterThan>
+																		<rule:GreaterThan.Left>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:Add>
+																					<rule:Add.Left>
+																						<InArgument x:TypeArguments="au:DynamicValue">
+																							<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/Total New Primary Cable Runs" />
+																						</InArgument>
+																					</rule:Add.Left>
+																					<rule:Add.Right>
+																						<InArgument x:TypeArguments="au:DynamicValue">
+																							<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/Total Existing Primary Cable Runs" />
+																						</InArgument>
+																					</rule:Add.Right>
+																				</rule:Add>
+																			</InArgument>
+																		</rule:GreaterThan.Left>
+																		<rule:GreaterThan.Right>
+																			<InArgument x:TypeArguments="au:DynamicValue">
+																				<rule:DynamicLiteral x:TypeArguments="x:Double" Value="6" />
+																			</InArgument>
+																		</rule:GreaterThan.Right>
+																	</rule:GreaterThan>
+																</InArgument>
+															</rule:If.Condition>
+															<rule:If.Then>
+																<Sequence>
+																	<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="d4080192-93b0-4a33-a6bf-9f503e094276">
+																		<rule:AddValidationItem.Message>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringExpression>
+																					<rule:StringExpression.Elements>
+																						<InArgument x:TypeArguments="x:String">
+																							<rule:StringLiteral Uid="657cb5e0-6e66-498d-a0c2-9905d78ab5d4" Value="A maximum of 6 primary cables is allowed in this three-phase transformer. Please redesign." />
+																						</InArgument>
+																					</rule:StringExpression.Elements>
+																				</rule:StringExpression>
+																			</InArgument>
+																		</rule:AddValidationItem.Message>
+																	</rule:AddValidationItem>
+																</Sequence>
+															</rule:If.Then>
+															<rule:If.Else>
+																<Sequence />
+															</rule:If.Else>
+														</rule:If>
+													</Sequence>
+												</rule:If.Else>
+											</rule:If>
+										</Sequence>
+									</rule:If.Then>
+									<rule:If.Else>
+										<Sequence />
+									</rule:If.Else>
+								</rule:If>
+							</Sequence>
+						</rule:If.Else>
+					</rule:If>
+					<rule:If>
+						<rule:If.Condition>
+							<InArgument x:TypeArguments="au:DynamicValue">
+								<rule:AndAlso>
+									<rule:AndAlso.Left>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:Equal>
+												<rule:Equal.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="PHASE_COUNT" />
+													</InArgument>
+												</rule:Equal.Left>
+												<rule:Equal.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:DynamicLiteral x:TypeArguments="x:Int32" Value="1" />
+													</InArgument>
+												</rule:Equal.Right>
+											</rule:Equal>
+										</InArgument>
+									</rule:AndAlso.Left>
+									<rule:AndAlso.Right>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:Equal>
+												<rule:Equal.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="ID_STRUCTURE_TYPE" />
+													</InArgument>
+												</rule:Equal.Left>
+												<rule:Equal.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:DomainValue DomainName="EL_STRUCTURE_TYPE_TBD" ID="4" />
+													</InArgument>
+												</rule:Equal.Right>
+											</rule:Equal>
+										</InArgument>
+									</rule:AndAlso.Right>
+								</rule:AndAlso>
+							</InArgument>
+						</rule:If.Condition>
+						<rule:If.Then>
+							<Sequence>
+								<rule:If>
+									<rule:If.Condition>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:GreaterThan>
+												<rule:GreaterThan.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/3PH Primary Wire" />
+													</InArgument>
+												</rule:GreaterThan.Left>
+												<rule:GreaterThan.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0" />
+													</InArgument>
+												</rule:GreaterThan.Right>
+											</rule:GreaterThan>
+										</InArgument>
+									</rule:If.Condition>
+									<rule:If.Then>
+										<Sequence>
+											<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="98ed7b98-5728-45c9-82d0-cc3ceaff1abf">
+												<rule:AddValidationItem.Message>
+													<InArgument x:TypeArguments="x:String">
+														<rule:StringExpression>
+															<rule:StringExpression.Elements>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringLiteral Uid="f771b64d-06ef-400f-8653-5fb93f31e9bd" Value="Three-phase primary cables are not allowed in a single-phase transformer. Please redesign." />
+																</InArgument>
+															</rule:StringExpression.Elements>
+														</rule:StringExpression>
+													</InArgument>
+												</rule:AddValidationItem.Message>
+											</rule:AddValidationItem>
+										</Sequence>
+									</rule:If.Then>
+									<rule:If.Else>
+										<Sequence />
+									</rule:If.Else>
+								</rule:If>
+								<rule:If>
+									<rule:If.Condition>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:GreaterThan>
+												<rule:GreaterThan.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/3PH Secondary\Service" />
+													</InArgument>
+												</rule:GreaterThan.Left>
+												<rule:GreaterThan.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0" />
+													</InArgument>
+												</rule:GreaterThan.Right>
+											</rule:GreaterThan>
+										</InArgument>
+									</rule:If.Condition>
+									<rule:If.Then>
+										<Sequence>
+											<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="43551f70-5814-48e0-899d-4cf4e3eca842">
+												<rule:AddValidationItem.Message>
+													<InArgument x:TypeArguments="x:String">
+														<rule:StringExpression>
+															<rule:StringExpression.Elements>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringLiteral Uid="a54bc09b-2194-4f1a-a230-d696a2aaccdc" Value="Three-phase secondary cables are not allowed in a single-phase transformer. Please redesign." />
+																</InArgument>
+															</rule:StringExpression.Elements>
+														</rule:StringExpression>
+													</InArgument>
+												</rule:AddValidationItem.Message>
+											</rule:AddValidationItem>
+										</Sequence>
+									</rule:If.Then>
+									<rule:If.Else>
+										<Sequence />
+									</rule:If.Else>
+								</rule:If>
+								<rule:If>
+									<rule:If.Condition>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:GreaterThan>
+												<rule:GreaterThan.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/Total New\Existing Sec\Srv\Stl" />
+													</InArgument>
+												</rule:GreaterThan.Left>
+												<rule:GreaterThan.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:DynamicLiteral x:TypeArguments="x:Double" Value="8" />
+													</InArgument>
+												</rule:GreaterThan.Right>
+											</rule:GreaterThan>
+										</InArgument>
+									</rule:If.Condition>
+									<rule:If.Then>
+										<Sequence>
+											<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="460be3a5-54ed-44f4-99d9-5fd56194a3d7">
+												<rule:AddValidationItem.Message>
+													<InArgument x:TypeArguments="x:String">
+														<rule:StringExpression>
+															<rule:StringExpression.Elements>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringLiteral Uid="090f0a1c-cc8c-4f3c-aa87-a35e2c26b002" Value="A maximum of 8 Secondary\Service\Street Light cables is allowed in this transformer. Please redesign." />
+																</InArgument>
+															</rule:StringExpression.Elements>
+														</rule:StringExpression>
+													</InArgument>
+												</rule:AddValidationItem.Message>
+											</rule:AddValidationItem>
+										</Sequence>
+									</rule:If.Then>
+									<rule:If.Else>
+										<Sequence />
+									</rule:If.Else>
+								</rule:If>
+							</Sequence>
+						</rule:If.Then>
+						<rule:If.Else>
+							<Sequence>
+								<rule:If>
+									<rule:If.Condition>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:AndAlso>
+												<rule:AndAlso.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:Equal>
+															<rule:Equal.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="PHASE_COUNT" />
+																</InArgument>
+															</rule:Equal.Left>
+															<rule:Equal.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="x:Double" Value="3" />
+																</InArgument>
+															</rule:Equal.Right>
+														</rule:Equal>
+													</InArgument>
+												</rule:AndAlso.Left>
+												<rule:AndAlso.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:Equal>
+															<rule:Equal.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="ID_STRUCTURE_TYPE" />
+																</InArgument>
+															</rule:Equal.Left>
+															<rule:Equal.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DomainValue DomainName="EL_STRUCTURE_TYPE_TBD" ID="4" />
+																</InArgument>
+															</rule:Equal.Right>
+														</rule:Equal>
+													</InArgument>
+												</rule:AndAlso.Right>
+											</rule:AndAlso>
+										</InArgument>
+									</rule:If.Condition>
+									<rule:If.Then>
+										<Sequence>
+											<rule:If>
+												<rule:If.Condition>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:GreaterThan>
+															<rule:GreaterThan.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/1PH Sec\Srv\Stl" />
+																</InArgument>
+															</rule:GreaterThan.Left>
+															<rule:GreaterThan.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0" />
+																</InArgument>
+															</rule:GreaterThan.Right>
+														</rule:GreaterThan>
+													</InArgument>
+												</rule:If.Condition>
+												<rule:If.Then>
+													<Sequence>
+														<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Message" Uid="0e7cf548-f4dd-44a8-96ae-e4c18f414c96">
+															<rule:AddValidationItem.Message>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringExpression>
+																		<rule:StringExpression.Elements>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringLiteral Uid="29dd6efe-65b3-4aa9-a12b-834f593f39a9" Value="Single-phase secondary cables detected in this three-phase transformer." />
+																			</InArgument>
+																		</rule:StringExpression.Elements>
+																	</rule:StringExpression>
+																</InArgument>
+															</rule:AddValidationItem.Message>
+														</rule:AddValidationItem>
+													</Sequence>
+												</rule:If.Then>
+												<rule:If.Else>
+													<Sequence />
+												</rule:If.Else>
+											</rule:If>
+											<rule:If>
+												<rule:If.Condition>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:GreaterThan>
+															<rule:GreaterThan.Left>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:NamedRuleFunction RulePath="/General/Count/ELECTRIC/Point/Total New\Existing Sec\Srv\Stl" />
+																</InArgument>
+															</rule:GreaterThan.Left>
+															<rule:GreaterThan.Right>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="x:Double" Value="8" />
+																</InArgument>
+															</rule:GreaterThan.Right>
+														</rule:GreaterThan>
+													</InArgument>
+												</rule:If.Condition>
+												<rule:If.Then>
+													<Sequence>
+														<rule:AddValidationItem Feature="[FeatureItem]" Results="[ValidationResult]" Type="Error" Uid="cb58826b-bd34-4bed-8fa7-c07ee6744999">
+															<rule:AddValidationItem.Message>
+																<InArgument x:TypeArguments="x:String">
+																	<rule:StringExpression>
+																		<rule:StringExpression.Elements>
+																			<InArgument x:TypeArguments="x:String">
+																				<rule:StringLiteral Uid="8ad248ea-ac9c-4b99-8805-f17c627f7db3" Value="A maximum of 8 Secondary\Service\Street Light cables is allowed in this transformer. Please redesign." />
+																			</InArgument>
+																		</rule:StringExpression.Elements>
+																	</rule:StringExpression>
+																</InArgument>
+															</rule:AddValidationItem.Message>
+														</rule:AddValidationItem>
+													</Sequence>
+												</rule:If.Then>
+												<rule:If.Else>
+													<Sequence />
+												</rule:If.Else>
+											</rule:If>
+										</Sequence>
+									</rule:If.Then>
+									<rule:If.Else>
+										<Sequence />
+									</rule:If.Else>
+								</rule:If>
+							</Sequence>
+						</rule:If.Else>
+					</rule:If>
+				</Sequence>
+			</rule:If.Then>
+			<rule:If.Else>
+				<Sequence />
+			</rule:If.Else>
+		</rule:If>
+		<rule:If>
+			<rule:If.Condition>
+				<InArgument x:TypeArguments="au:DynamicValue">
+					<rule:AndAlso>
+						<rule:AndAlso.Left>
+							<InArgument x:TypeArguments="au:DynamicValue">
+								<rule:ContainerExist ClassName="EL_POLE" Feature="[FeatureItem]">
+									<rule:ContainerExist.Match>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:GreaterThanOrEqual>
+												<rule:GreaterThanOrEqual.Left>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:ContainedCount ClassName="EL_POLE_HEAD" Feature="[FeatureItem]">
+															<rule:ContainedCount.Match>
+																<InArgument x:TypeArguments="au:DynamicValue">
+																	<rule:DynamicLiteral x:TypeArguments="x:Boolean" Value="True">
+																		<rule:DynamicLiteral.Result>
+																			<OutArgument x:TypeArguments="au:DynamicValue">
+																				<ArgumentReference x:TypeArguments="au:DynamicValue" ArgumentName="MatchResult" />
+																			</OutArgument>
+																		</rule:DynamicLiteral.Result>
+																	</rule:DynamicLiteral>
+																</InArgument>
+															</rule:ContainedCount.Match>
+														</rule:ContainedCount>
+													</InArgument>
+												</rule:GreaterThanOrEqual.Left>
+												<rule:GreaterThanOrEqual.Result>
+													<OutArgument x:TypeArguments="au:DynamicValue">
+														<ArgumentReference x:TypeArguments="au:DynamicValue" ArgumentName="MatchResult" />
+													</OutArgument>
+												</rule:GreaterThanOrEqual.Result>
+												<rule:GreaterThanOrEqual.Right>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:DynamicLiteral x:TypeArguments="x:Int32" Value="1" />
+													</InArgument>
+												</rule:GreaterThanOrEqual.Right>
+											</rule:GreaterThanOrEqual>
+										</InArgument>
+									</rule:ContainerExist.Match>
+								</rule:ContainerExist>
+							</InArgument>
+						</rule:AndAlso.Left>
+						<rule:AndAlso.Right>
+							<InArgument x:TypeArguments="au:DynamicValue">
+								<rule:NotEqualWithinTolerance>
+									<rule:NotEqualWithinTolerance.Left>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:FeatureItemProperty Feature="[FeatureItem]" PropertyPath="ROTATION_3D" />
+										</InArgument>
+									</rule:NotEqualWithinTolerance.Left>
+									<rule:NotEqualWithinTolerance.Right>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:NamedRuleFunction RulePath="/General/Number/ELECTRIC/Point/EL_TRANSFORMER/Pole Head Rotation" />
+										</InArgument>
+									</rule:NotEqualWithinTolerance.Right>
+									<rule:NotEqualWithinTolerance.Tolerance>
+										<InArgument x:TypeArguments="au:DynamicValue">
+											<rule:DynamicLiteral x:TypeArguments="x:Double" Value="0.0001" />
+										</InArgument>
+									</rule:NotEqualWithinTolerance.Tolerance>
+								</rule:NotEqualWithinTolerance>
+							</InArgument>
+						</rule:AndAlso.Right>
+					</rule:AndAlso>
+				</InArgument>
+			</rule:If.Condition>
+			<rule:If.Then>
+				<Sequence>
+					<rule:PromptResolve Feature="[FeatureItem]" Results="[ValidationResult]" Type="Warning" Uid="c2fba196-7afe-4237-9d72-b49ac5d326e7">
+						<rule:PromptResolve.Message>
+							<InArgument x:TypeArguments="x:String">
+								<rule:StringExpression>
+									<rule:StringExpression.Elements>
+										<InArgument x:TypeArguments="x:String">
+											<rule:StringLiteral Uid="b16e78fe-04e1-48e1-9fc9-63dd139c251c" Value="This rotation is wrong." />
+										</InArgument>
+									</rule:StringExpression.Elements>
+								</rule:StringExpression>
+							</InArgument>
+						</rule:PromptResolve.Message>
+						<rule:PromptResolve.PromptResult>
+							<Variable x:TypeArguments="au:ResolutionValidationItem" Name="PromptResult" />
+						</rule:PromptResolve.PromptResult>
+						<rule:PromptResolve.ResolutionBuildActivities>
+							<rule:BuildResolution DetailGuid="{x:Null}" Result="[PromptResult]">
+								<rule:BuildResolution.ResolutionMessage>
+									<InArgument x:TypeArguments="x:String">
+										<rule:StringExpression>
+											<rule:StringExpression.Elements>
+												<InArgument x:TypeArguments="x:String">
+													<rule:StringLiteral Uid="feef4c21-5728-45ef-93d3-4368cade7492" Value="Update the rotation" />
+												</InArgument>
+											</rule:StringExpression.Elements>
+										</rule:StringExpression>
+									</InArgument>
+								</rule:BuildResolution.ResolutionMessage>
+								<rule:BuildResolution.ResolutionWorkflow>
+									<Sequence>
+										<rule:UpdateMultipleProperties TargetFeatureClass="{x:Null}" FeatureContext="[FeatureItem]" TargetFeature="[TargetFeature]" UpdateToDatabase="True">
+											<rule:UpdateProperty TargetFeatureClass="{x:Null}" AttributeName="ROTATION_3D" Feature="[FeatureItem]" NeedsUpdate="False" TargetFeature="[TargetFeature]">
+												<rule:UpdateProperty.AttributeValue>
+													<InArgument x:TypeArguments="au:DynamicValue">
+														<rule:NamedRuleFunction RulePath="/General/Number/ELECTRIC/Point/EL_TRANSFORMER/Pole Head Rotation" />
+													</InArgument>
+												</rule:UpdateProperty.AttributeValue>
+											</rule:UpdateProperty>
+										</rule:UpdateMultipleProperties>
+									</Sequence>
+								</rule:BuildResolution.ResolutionWorkflow>
+							</rule:BuildResolution>
+						</rule:PromptResolve.ResolutionBuildActivities>
+					</rule:PromptResolve>
+				</Sequence>
+			</rule:If.Then>
+			<rule:If.Else>
+				<Sequence />
+			</rule:If.Else>
+		</rule:If>
+	</Sequence>
+</Activity>

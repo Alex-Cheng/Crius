@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+
+<html lang=en>
+<head>
+    <title>Rule Editor</title>
+    <link type="text/css" rel="Stylesheet" href="global.css"></link>
+    <script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+    <script type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            var ActivityEntries = {
+                "rule:InvokeNamedRule": InvokeNamedRuleActivity,
+                "rule:If": IfActivity,
+                "Sequence": SequenceActivity,
+                "rule:FeaturePropertyIsSet": FeaturePropertyIsSet,
+                "rule:AddValidationItem": AddValidationItem,
+                "rule:AndAlso": AndAlso,
+                "rule:OrElse": OrElse,
+                "rule:GreaterThan": GreaterThan,
+                "rule:Equal": Equal,
+                "rule:FeatureItemProperty": FeatureItemProperty,
+                "InArgument": InArgument,
+                "rule:DynamicLiteral": DynamicLiteral,
+                "rule:NamedRuleFunction": NamedRuleFunction
+            };
+
+            function InvokeNamedRuleActivity(node) {
+                var subruleName = $(node).attr("RulePath").split("/").pop();
+                return {
+                    domObject: $("<div class=activity></div>")
+                        .append($("<span>Invoke subrule</span>"))
+                        .append($("<a class=subrule href=#></a>").text(subruleName))
+                };
+            }
+
+            function NamedRuleFunction(node) {
+                var subruleName = $(node).attr("RulePath").split("/").pop();
+                return {
+                    domObject: $("<a class=subrule href=#></a>").text(subruleName)
+                };
+            }
+
+            function IfActivity(node) {
+                var $if = $(node);
+                var $ifUI = $("<div class=activity>If</div>");
+                var $condExprUI = $("<div class=expr />");
+                var $condition = $if.children().filter(function () {
+                    return this.nodeName.toLowerCase() == "rule:if.condition"
+                });
+                $condition.children("InArgument").children().each(function () {
+                    parseActivity(this, $condExprUI);
+                });
+
+                var $then = $if.children().filter(function () {
+                    return this.nodeName.toLowerCase() == "rule:if.then"
+                });
+                var $thenUI = $("<div class=expander />");
+                $then.children().each(function () {
+                    parseActivity(this, $thenUI);
+                });
+
+                var $else = $if.children().filter(function () {
+                    return this.nodeName.toLowerCase() == "rule:if.else"
+                });
+                var $elseUI = $("<div class=expander />");
+                $else.children().each(function () {
+                    parseActivity(this, $elseUI);
+                });
+
+                return {
+                    domObject: $("<div class=activity>If</div>")
+                                .append($condExprUI)
+                                .append("<p>Then</p>")
+                                .append($thenUI)
+                                .append("<p>Else</p>")
+                                .append($elseUI)
+                };
+            }
+
+            function SequenceActivity(node) {
+                var $seqContainer = $("<div class='sequence' />");
+
+                var $seq = $(node);
+                $seq.children().each(function () {
+                    parseActivity(this, $seqContainer);
+                });
+
+                return {
+                    domObject: $seqContainer
+                };
+            }
+
+            function FeaturePropertyIsSet(node) {
+                var $featPropertyIsSet = $(node);
+                var $funcUI = $("<div class=function />");
+                $funcUI.text($featPropertyIsSet.attr("PropertyPath") + " is set");
+
+                return {
+                    domObject: $funcUI
+                };
+            }
+
+            function AddValidationItem(node) {
+                var $report = $(node);
+                var $activityUI = $("<div class=function />");
+                var message = "";
+                $report.find("*").filter(function () {
+                    if (this.nodeName == "rule:StringLiteral") {
+                        message = $(this).attr("Value");
+                    }
+                });
+                $activityUI.text("Report " + $report.attr("Type") + " ");
+                $activityUI.append($("<span class=text />").text(message));
+                return {
+                    domObject: $activityUI
+                };
+            }
+
+            function BinaryOperator(node, operatorName) {
+                var $op = $(node);
+                var $left = $op.children().filter(function () {
+                    return this.nodeName.search(/left$/gi) != -1;
+                });
+                var $right = $op.children().filter(function () {
+                    return this.nodeName.search(/right$/gi) != -1;
+                });
+
+                var $exprUI = $("<div class=exprItem />");
+                $left.children().each(function () {
+                    parseActivity(this, $exprUI);
+                });
+                $exprUI.append($("<span class=operator />").text(operatorName));
+                $right.children().each(function () {
+                    parseActivity(this, $exprUI);
+                });
+
+                return {
+                    domObject: $exprUI
+                };
+            }
+
+            function AndAlso(node) {
+                return BinaryOperator(node, "and");
+            }
+
+            function OrElse(node) {
+                return BinaryOperator(node, "or");
+            }
+
+            function GreaterThan(node) {
+                return BinaryOperator(node, "is greater than");
+            }
+
+            function Equal(node) {
+                return BinaryOperator(node, "equals to");
+            }
+
+            function FeatureItemProperty(node) {
+                var $property = $(node);
+                return {
+                    domObject: $("<span class=exprItem />").text($property.attr("PropertyPath"))
+                };
+            }
+
+            function InArgument(node) {
+                return {
+                    domObject: parseActivity($(node).children()[0])
+                };
+            }
+
+            function DynamicLiteral(node) {
+                var $literal = $(node);
+                return {
+                    domObject: $("<span class=literal/>").text($literal.attr("Value"))
+                };
+            }
+
+            function parseActivity(activity, $container) {
+                var tagName = activity.tagName;
+                if (typeof ActivityEntries[tagName] !== "undefined") {
+                    var factory = ActivityEntries[tagName];
+                    var e = factory(activity);
+                    if (typeof $container != "undefined") {
+                        $container.append(e.domObject);
+                    }
+                    return e.domObject;
+                }
+                else {
+                    var $text = $("<div />").text(tagName);
+                    if (typeof $container != "undefined") {
+                        $container.append($text);
+                    }
+                    return $text;
+                }
+            }
+
+
+            $.ajax({
+                url: "./ValidationRule.xaml",
+                dataType: "xml",
+                success: function (data) {
+                    var $doc = $(data);
+                    var $activity = $doc.find("Activity");
+                    $activity.children().each(function () {
+                        parseActivity(this, $("#board"));
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="board"></div>
+</body>
+</html>
