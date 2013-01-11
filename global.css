@@ -10,7 +10,7 @@ div { display:inline-block; }
 a { color:blue; }
 p { margin:0; }
 .activity  { display:block; margin: 0px 0px 15px 15px; overflow:hidden; }
-.subrule {  margin-left: 0px; }
+.subrule {  margin-left: 6px; margin-right: 6px}
 .sequence { }
 .expr { display: inline-block; color:blue; margin:0 5px; }
 .function  { display: inline; color:blue; }

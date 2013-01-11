@@ -20,13 +20,14 @@
                 "rule:FeatureItemProperty": FeatureItemProperty,
                 "InArgument": InArgument,
                 "rule:DynamicLiteral": DynamicLiteral,
-                "rule:NamedRuleFunction": NamedRuleFunction
+                "rule:NamedRuleFunction": NamedRuleFunction,
+                "rule:DomainValue": DomainValue
             };
 
             function InvokeNamedRuleActivity(node) {
                 var subruleName = $(node).attr("RulePath").split("/").pop();
                 return {
-                    domObject: $("<div class=activity><span class='icons unfolderIcon'></span></div>")
+                    domObject: $("<div class=activity></div>")
                         .append($("<span>Invoke subrule</span>"))
                         .append($("<a class=subrule href=###></a>").text(subruleName))
                 };
@@ -54,7 +55,7 @@
                     return this.nodeName.toLowerCase() == "rule:if.then"
                 });
                 var $thenUI = $("<div class=expander />");
-                $then.children().each(function () {
+                $then.children("Sequence").children().each(function () {
                     parseActivity(this, $thenUI);
                 });
 
@@ -62,18 +63,32 @@
                     return this.nodeName.toLowerCase() == "rule:if.else"
                 });
                 var $elseUI = $("<div class=expander />");
-                $else.children().each(function () {
+                var hasElse = false;
+                $else.children("Sequence").children().each(function () {
+                    hasElse = true;
                     parseActivity(this, $elseUI);
                 });
-
-                return {
-                    domObject: $("<div class=activity><span class='icons unfolderIcon'></span>If</div>")
-                                .append($condExprUI)
-                                .append("<p>Then</p>")
-                                .append($thenUI)
-                                .append("<p>Else</p>")
-                                .append($elseUI)
-                };
+                
+                if(hasElse) {
+                    return {
+                        domObject: $("<div class=activity>If</div>")
+                                    .append($condExprUI)
+                                    .append("<span class='icons unfolderIcon'></span>")
+                                    .append("<p>Then</p>")
+                                    .append($thenUI)
+                                    .append("<p>Else</p>")
+                                    .append($elseUI)
+                    };
+                }
+                else {
+                    return {
+                        domObject: $("<div class=activity>If</div>")
+                                    .append($condExprUI)
+                                    .append("<span class='icons unfolderIcon'></span>")
+                                    .append("<p>Then</p>")
+                                    .append($thenUI)
+                    };
+                }
             }
 
             function SequenceActivity(node) {
@@ -113,6 +128,13 @@
                 return {
                     domObject: $activityUI
                 };
+            }
+            
+            function DomainValue(node) {
+                var $dv = $(node);
+                return {
+                    domObject: $("<span class=literal />").text("[" + $dv.attr("ID") + "]")
+                }
             }
 
             function BinaryOperator(node, operatorName) {
@@ -184,7 +206,7 @@
                     }
                     return e.domObject;
                 }
-                else {
+                else if(tagName !== "x:Members"){
                     var $text = $("<div />").text(tagName);
                     if (typeof $container != "undefined") {
                         $container.append($text);
@@ -215,15 +237,6 @@
 							$(this).addClass("unfolderIcon");
 						}
 					);
-					$(".whitebg").bind("click", function(){
-						$("body").attr("class", "white");
-					})
-					$(".blackbg").bind("click", function(){
-						$("body").attr("class", "black");
-					})
-					$(".greybg").bind("click", function(){
-						$("body").attr("class", "grey");
-					})
                 }
             });
         });
@@ -231,11 +244,6 @@
 </head>
 <body class="white">
     <div id="board">
-		<p>
-			<span class="whitebg"><span></span> white</span>
-			<span class="greybg"><span></span> grey</span>
-			<span class="blackbg"> <span></span> black</span>
-		</p>
 	</div>
 </body>
 </html>
