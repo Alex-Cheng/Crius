@@ -1,5 +1,7 @@
-= Introduction
+Introduction
+=================
 This project is an experimental project for porting rules editor to cloud.
 
-= Technologies
+How It Works
+=================
 JavaScript in editor.html reads XAML content from ValidationRule.xaml, and then represent it in web page.
